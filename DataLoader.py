@@ -8,7 +8,7 @@ from functools import reduce
 class DataLoader:
     
     def __init__(self ):
-        self.source = PandasTools.LoadSDF('data/tox21_10k_data_all.sdf', smilesName='SMILES', molColName='Molecule', includeFingerprints=True)
+        self.source = PandasTools.LoadSDF('data/tox21_10k_data_all.sdf', smilesName='SMILES', molColName='Molecule')
         
     def clean_number(self, s):
         return float(re.split(r'[\s(]', s)[0])
