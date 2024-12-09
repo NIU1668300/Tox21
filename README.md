@@ -1,6 +1,6 @@
 # Tox21
 
-This repository is a Machine Learning project that tackles the Tox-21 data challenge in its reduced version, the data can be obtained from its webpage:
+This repository is a Machine Learning project that tackles the Tox-21 data challenge in its simplified version, the data can be obtained from its webpage:
 
 https://tripod.nih.gov/tox21/challenge/data.jsp
 
@@ -42,11 +42,14 @@ A SMILES (Simplified Molecular Input Line Entry System) representation refers to
 **Exploratory data analysis** which can be found on `EDA.ipynb` serves the purpose of finding an initial description of the data we are working with.
 
 **Preprocessing** which can be found on `Preprocess.py` is a script that prepares the data in order to train the model doing the following actions:
+ * Scaffolding molecules: Retrieval of the most important part of the molecule.
  * Converting molecules to graphs: Taking into account that biomolecules can be thought as graphs where atoms are the nodes and bonds are the vertices the `RdKit` and `networkx` libraries are used to convert SMILES to graphs.
  * Embed nodes: Utilization of `node2vec` to generate biased random walks along the graph.
  * Extracting graph features: Using `networkx` the average degree, density, clustering coefficient and diameter of each graph was extracted.
  * Molecular descriptors: Using `rdkit` to extract the Molecular weight, partition coefficient, number of Donor and acceptor hydrogens and molecular polar surface area of each molecule.
  * Fingerprints: Extracted molecular fingerprints using Morgan and MACCS algorithms.
+
+![image](assets/molProcess.png)
 
 **Training** The training located at `train.py` loads the data, imputes the missing columns using `IterativeImputer` from sklearn and fits a multioutput `XGBClassifier`, due to the excessive data imbalance every class weight is calculated and manually assigned to each estimator to ensure a better fit.
 
@@ -56,6 +59,9 @@ First train the model which will be stored as `models/model.pkl`
 ```sh
 python train.py
 ```
+**Note: Given that the script has to generate the all of the features it could take a long time to run, for instance in a 12 core machine running a ryzen 5 7600X it takes 55 minutes to load.
+
+
 Then you can make predictions running
 ```sh
 python predict.py "{smiles}"
@@ -80,6 +86,30 @@ NR-AR-LBD:Inactive
 ```
 
 # Results
+
+The dataset was tested with a train validation, test split of 70%, 20%, 10% cross-validated with 5 stratified folds, the final confusion matrices on the test set was:
+
+![image](assets/matrix.png)
+
+Not every class performs equally, to illustrate:
+
+![image](assets/percentage.png)
+
+| Endpoint           | F1-Score |
+|--------------------|----------|
+| SR-HSE            | 0.9567   |
+| NR-AR             | 0.9707   |
+| SR-ARE            | 0.9855   |
+| NR-Aromatase      | 0.9614   |
+| NR-ER-LBD         | 0.9801   |
+| NR-AhR            | 0.9742   |
+| SR-MMP            | 0.9752   |
+| NR-ER             | 0.9831   |
+| NR-PPAR-gamma     | 0.9683   |
+| SR-p53            | 0.9660   |
+| SR-ATAD5          | 0.9480   |
+| NR-AR-LBD         | 0.9875   |
+
 
 # Dependencies
 

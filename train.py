@@ -19,6 +19,7 @@ data_loader = DataLoader()
 data = data_loader.get_processed_source()
 preprocessing = Preprocessing(data)
 feature_df = preprocessing.preprocess()
+feature_df.to_csv("data/features.csv", index=False)
 
 tox21 = pd.read_csv('data/tox21')
 label_columns = ['SR-HSE','NR-AR', 'SR-ARE', 'NR-Aromatase', 'NR-ER-LBD', 'NR-AhR', 'SR-MMP',\
