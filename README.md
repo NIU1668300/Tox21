@@ -36,8 +36,9 @@ A SMILES (Simplified Molecular Input Line Entry System) representation refers to
  * Reformat the molecular weight column to work with numbers.
  * Change types to floats.
  * Duplicates elimination: The tox21 dataset is a experimental dataset so duplicate SMILES are often found and it is common to have NaNs if the experiment for that receptor was not done, when a duplicate is found the following process is followed (This method is based on the original challenge specifications):
-  - Case NaN vs number -> number remains
-  - Case 1 vs 0 -> 1 remains
+ 
+    - Case NaN vs number -> number remains
+    - Case 1 vs 0 -> 1 remains
         
 **Exploratory data analysis** which can be found on `EDA.ipynb` serves the purpose of finding an initial description of the data we are working with.
 
