@@ -1,0 +1,7 @@
+pandas==2.2.3
+numpy==1.26.4
+rdkit==2024.03.6
+scikit-learn==1.5.2
+pickle==4.0
+node2vec==0.5.0
+colorama==0.4.6

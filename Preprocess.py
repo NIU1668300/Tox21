@@ -13,7 +13,7 @@ class Preprocessing:
     def __init__(self, data):
         self.data = data
        
-    def _compute_descriptors(smiles):
+    def _compute_descriptors(self, smiles):
         mol = Chem.MolFromSmiles(smiles)
         descriptors = {
             "MolecularWeight": Descriptors.MolWt(mol),
@@ -24,7 +24,7 @@ class Preprocessing:
         }
         return descriptors
 
-    def _compute_fingerprints(smiles):
+    def _compute_fingerprints(self, smiles):
         mol = Chem.MolFromSmiles(smiles)
         morgan_fp = AllChem.GetMorganFingerprintAsBitVect(mol, radius=2, nBits=2048)
         maccs_fp = MACCSkeys.GenMACCSKeys(mol)
@@ -33,7 +33,7 @@ class Preprocessing:
             "MACCSFP": list(maccs_fp),
         }
     
-    def _compute_graph_features(graph):
+    def _compute_graph_features(self, graph):
         features = {
             "AverageDegree": sum(dict(graph.degree()).values()) / len(graph.nodes()),
             "Density": nx.density(graph),
@@ -45,7 +45,7 @@ class Preprocessing:
             features["Diameter"] = None
         return features
 
-    def _compute_node2vec_embeddings(graph, dimensions=64):
+    def _compute_node2vec_embeddings(self, graph, dimensions=64):
         node2vec = Node2Vec(graph, dimensions=dimensions, walk_length=30, num_walks=50, workers=12, seed=42)
         model = node2vec.fit(window=10, min_count=1, batch_words=4)
         
@@ -53,7 +53,7 @@ class Preprocessing:
         graph_embedding = node_embeddings.mean(axis=0)  
         return graph_embedding
     
-    def _smiles_to_graph(smiles):
+    def _smiles_to_graph(self, smiles):
         mol = Chem.MolFromSmiles(smiles)
         if mol is None:
             return None
@@ -66,29 +66,25 @@ class Preprocessing:
     def preprocess(self):
         
         smiles_list = self.data['SMILES'].tolist()
+        features = []
+        for smile in smiles_list:
+            try:
+                graph = self._smiles_to_graph(smile)
+                
+                descriptors = self._compute_descriptors(smile)
+                fingerprints = self._compute_fingerprints(smile)
+                graph_features = self._compute_graph_features(graph)
+                node2vec_embeddings = self._compute_node2vec_embeddings(graph)
+                
+                combined_features = {**descriptors, **fingerprints, **graph_features, **{f"Node2Vec{i}": node2vec_embeddings[i] for i in range(len(node2vec_embeddings))}}
+                features.append(combined_features)
+            except Exception as e:
+                print(f"Invalid SMILE: {smile}: {e}")
+            
+        feature_df = pd.DataFrame(features)
+       
         
-        
-        if not os.path.exists('data/features.csv'):
-            features = []
-            for smile in smiles_list:
-                try:
-                    mol = Chem.MolFromSmiles(smile)
-                    graph = self._smiles_to_graph(smile)
-                    
-                    descriptors = self._compute_descriptors(smile)
-                    fingerprints = self._compute_fingerprints(smile)
-                    graph_features = self._compute_graph_features(graph)
-                    node2vec_embeddings = self._compute_node2vec_embeddings(graph)
-                    
-                    combined_features = {**descriptors, **fingerprints, **graph_features, **{f"Node2Vec{i}": node2vec_embeddings[i] for i in range(len(node2vec_embeddings))}}
-                    features.append(combined_features)
-                except Exception as e:
-                    print(f"Tus muertos pisados {smile}: {e}")
-
-            feature_df = pd.DataFrame(features)
-            feature_df.to_csv('data/features.csv', index=False)
-        else:
-            feature_df = pd.read_csv('data/features.csv')
+        return feature_df
         
     
     
