@@ -7,11 +7,18 @@ https://tripod.nih.gov/tox21/challenge/data.jsp
 In this repository a Machine Learning model is created to predict the response panel of 12 toxicity endpoints in drug-related molecules done making feature creation and engineering using computational chemistry libraries.
 
 ## Table of contents
+- [Files](#Files)
 - [Data](#Data)
 - [Project outline](#project-outline)
 - [How to run](#how-to-run)
 - [Results](#results)
 - [Dependencies](#dependencies)
+
+# File hierarchy
+
+<pre><code> Root/ ├── folder1/ │ ├── file1.txt │ └── file2.txt ├── folder2/ │ ├── subfolder1/ │ │ └── file3.txt │ └── file4.txt └── file5.txt </code></pre>
+
+
 
 # Data
 
