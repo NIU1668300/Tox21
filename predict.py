@@ -2,7 +2,7 @@ import argparse
 import pandas as pd
 import pickle
 from colorama import Fore, Style
-from Preprocess import Preprocessing
+from Processing.Preprocess import Preprocessing
 
 try:
     with open('models/model.pkl', 'rb') as f:

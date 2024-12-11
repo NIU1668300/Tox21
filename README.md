@@ -16,9 +16,15 @@ In this repository a Machine Learning model is created to predict the response p
 
 # File hierarchy
 
-<pre><code> Root/ ├── folder1/ │ ├── file1.txt │ └── file2.txt ├── folder2/ │ ├── subfolder1/ │ │ └── file3.txt │ └── file4.txt └── file5.txt </code></pre>
-
-
+- Data/
+    * This folder is empty, when running train.py the features.csv and tox21.csv will appear
+- Models/
+    * This folder is empty, when running train.py model.pkl will appear
+- Processing/
+    * DataLoader - For loading the dataset
+    * Preprocessing - For preparing the data for classification
+- Train.py - Training script
+- Predict.py - Prediction script
 
 # Data
 
