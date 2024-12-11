@@ -23,6 +23,8 @@ In this repository a Machine Learning model is created to predict the response p
 - Processing/
     * DataLoader - For loading the dataset
     * Preprocessing - For preparing the data for classification
+- Assets/
+    * This folder contains the images displayed in the README
 - Train.py - Training script
 - Predict.py - Prediction script
 
